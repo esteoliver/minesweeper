@@ -1,6 +1,7 @@
 # minesweeper
 
-Implementation of an minesweeper for Deviget challenge.
+Implementation of an minesweeper for Deviget challenge. You can play on 
+[here](https://esteoliver-minesweeper.herokuapp.com/).
 
 ## The Game
 Develop the classic game of [Minesweeper](https://en.wikipedia.org/wiki/Minesweeper_(video_game))
