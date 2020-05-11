@@ -1,1 +1,42 @@
-<h1>Hello Minesweeper!</h1>
+<div class="row">
+
+  <div class="col p-4">
+    <h3 class="my-0">Welcome to Minesweeper!</h3>
+    <hr>
+
+    <p>A single-player puzzle video game</p>
+
+    <p>
+      The objective of the game is to clear a rectangular board containing hidden 
+      "mines" or bombs without detonating any of them, with help from clues about 
+      the number of neighboring mines in each field. The game originates from the 
+      1960s, and has been written for many computing platforms in use today. 
+      It has many variations and offshoots.
+    </p>
+
+    <p>
+      Minesweeper has a very basic gameplay style. In its original form, mines are scattered throughout a board. This board is divided into cells, which have three states: uncovered, covered and flagged. A covered cell is blank and clickable, while an uncovered cell is exposed, either containing a number (the mines adjacent to it), or a mine. When a cell is uncovered by a player click, and if it bears a mine, the game ends. A flagged cell is similar to a covered one, in the way that mines are not triggered when a cell is flagged, and it is impossible to lose through the action of flagging a cell. However, flagging a cell implies that a player thinks there is a mine underneath, which causes the game to deduct an available mine from the display.
+    </p>
+    <p>
+      In order to win the game, players must logically deduce where mines exist through the use of the numbers given by uncovered cells. To win, all non-mine cells must be uncovered. At this stage, the timer is stopped. Commonly all mine cells are also flagged, but this is not required.
+    </p>
+    <p>
+      When a player left-clicks on a cell, the game will uncover it. If there are no mines adjacent to that particular cell, the mine will display a blank tile or a "0", and all adjacent cells will automatically be uncovered. Right-clicking on a cell will flag it, causing a flag to appear on it. Note that flagged cells are still covered, and a player can click on it to uncover it, like a normal covered cell.
+    </p>
+  </div>
+
+  <div class="col p-4">
+    <div class="mb-5">
+      <span class="mr-4">Start a new game!</span>
+      <button>Play Now</button>
+    </div>
+
+    <button>
+      <%= link_to 'Login', new_player_session_path, class: 'nav-link' %>
+    </button>
+
+    <button>
+      <%= link_to "Sign up", new_registration_path('player') %><br />
+    </button>
+  </div>
+</div>
