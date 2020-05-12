@@ -59,3 +59,6 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'devise'
 # Serialize api responses to jsonapi
 gem 'fast_jsonapi'
+# redis API client
+gem 'redis'
+gem 'redis-namespace'
