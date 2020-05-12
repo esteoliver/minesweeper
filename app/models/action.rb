@@ -6,7 +6,7 @@ class Action
 
     if game_id.nil?
       game = AnonymousGame.get(player)
-      game.reveal(x,y)
+      game.reveal(x.to_i, y.to_i)
       AnonymousGame.set(player, game)
     end
 
