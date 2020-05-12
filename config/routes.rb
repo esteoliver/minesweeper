@@ -10,5 +10,13 @@ Rails.application.routes.draw do
   namespace :players do
     root to: redirect('/profiles/me')
   end
+
+  defaults format: :json do
+    namespace :api do
+      namespace :v1 do
+        resources :games, only: :create
+      end
+    end
+  end
   
 end

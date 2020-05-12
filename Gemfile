@@ -57,3 +57,5 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # Authentication
 gem 'devise'
+# Serialize api responses to jsonapi
+gem 'fast_jsonapi'
