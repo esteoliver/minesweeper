@@ -7,3 +7,23 @@ $bg-color: #C0C0C0;
 body {
   background: $bg-color;
 }
+
+
+$board-cell-size: 24px;
+
+#board {
+  text-align: center;
+
+  .row {
+    max-height: $board-cell-size;
+    min-height: $board-cell-size;
+    margin: 0;
+  }
+
+  button {
+    max-height: $board-cell-size;
+    max-width: $board-cell-size;
+    min-height: $board-cell-size;
+    min-width: $board-cell-size;
+  }
+}
