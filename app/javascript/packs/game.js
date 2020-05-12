@@ -52,15 +52,24 @@ function performAction(x,y, action) {
   });
 }
 
-function getGame() {
+function getGame(reset = null) {
   $.ajax({
     type: "POST",
     url: 'http://localhost:3000/api/v1/games',
-    data: {},
+    data: {
+      new: reset
+    },
     success: renderGame,
     dataType: 'json'
   });
 }
 
-getGame();
-
+$(document).ready(() => {
+  $('#new-game').on('click', e => {
+    e.stopPropagation();
+    getGame(true);
+  });
+  
+  
+  getGame();  
+});
