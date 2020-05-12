@@ -28,11 +28,13 @@
   <div class="col p-4">
     <div class="mb-5">
       <span class="mr-4">Start a new game!</span>
-      <button>Play Now</button>
+      <button>
+        <%= link_to 'Play Now', play_path %>
+      </button>
     </div>
 
     <button>
-      <%= link_to 'Login', new_player_session_path, class: 'nav-link' %>
+      <%= link_to 'Login', new_player_session_path %>
     </button>
 
     <button>

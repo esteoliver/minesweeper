@@ -7,3 +7,31 @@ $bg-color: #C0C0C0;
 body {
   background: $bg-color;
 }
+
+
+$board-cell-size: 24px;
+
+#board {
+  text-align: center;
+
+  .row {
+    max-height: $board-cell-size;
+    min-height: $board-cell-size;
+    margin: 0;
+  }
+
+  button {
+    max-height: $board-cell-size;
+    max-width: $board-cell-size;
+    min-height: $board-cell-size;
+    min-width: $board-cell-size;
+    text-align: center;
+    padding: 0;
+
+    &:not(.status-h) {
+      &:not(.status-f) {
+        box-shadow: inset -1px -1px #ffffff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+      }
+    }
+  }
+}

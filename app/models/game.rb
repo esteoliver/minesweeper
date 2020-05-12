@@ -29,16 +29,37 @@ class Game < ApplicationRecord
     args = {} if args.nil?
 
     super(args.except(*invalid_args_to_initialize))
-    self.assign_attributes Board.new(**args).as_json
+
+    self.assign_attributes Board.new(args).as_json
+  end
+
+  def self.create_anonymous(anonymous_player, **args)
+    return {} if anonymous_player.nil?
+
+    AnonymousGame.set(anonymous_player, Game.new(args))
+  end
+
+  def self.create_or_find_anonymous(anonymous_player, **args)
+    return AnonymousGame.get(anonymous_player) if AnonymousGame.exists(anonymous_player)
+
+    create_anonymous(anonymous_player, args)
   end
 
   def visualize
-    Board.visualize(board_status.chars, board_values.chars).join
+    board.visualize
+  end
+
+  def reveal(x,y)
+    self.board_status = board.reveal(x, y)
   end
   
   private 
 
   def invalid_args_to_initialize
-    %i(level board board_count mines mines_count)
+    %i(level mines_count anonymous_player)
+  end  
+
+  def board
+    Board.new self.attributes.with_indifferent_access
   end
 end
