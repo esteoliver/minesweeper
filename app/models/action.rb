@@ -7,6 +7,8 @@ class Action
     if game_id.nil?
       game = AnonymousGame.get(player)
 
+      return game if game.over?
+
       if action == 'reveal'
         game.reveal(x.to_i, y.to_i)
       elsif action == 'flag'

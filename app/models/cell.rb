@@ -12,12 +12,16 @@ class Cell
     return value if state == REVEALED_STATE
   end
 
+
   def self.is_blank?(value)
     value == BLANK_VALUE
   end
 
-  def self.revealed?(value)
-    value == REVEALED_STATE
+  def self.revealed?(state)
+    state == REVEALED_STATE
   end
 
+  def self.mine?(value)
+    value == MINE_VALUE
+  end
 end

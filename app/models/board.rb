@@ -21,7 +21,7 @@ class Board
   end
 
   def visualize
-    board_status.chars.each_with_index.map do |status_cell, i| 
+    board_status.chars.each_with_index.map do |status_cell, i|
       Cell.visualize(status_cell, values[i])
     end.join
   end
@@ -52,6 +52,17 @@ class Board
 
     status[(x * columns) + y] = Cell::REVEALED_STATE
     reveal_surroundings(x, y) if is_blank?(x, y)
+  end
+
+  ## Cell logics
+  def mine?(x, y)
+    Cell.mine? values[(x * columns) + y]
+  end
+
+  def mines_remaining?
+    (0..status.size-1).all? do |i|
+      Cell.mine?(values[i]) || Cell.revealed?(status[i])
+    end
   end
 
   private

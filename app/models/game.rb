@@ -9,7 +9,7 @@ class Game < ApplicationRecord
   DEFAULT_LEVEL = :intermediate
   LEVELS = {
     beginner: { rows: 8, columns: 8, mines_count: 10 },
-    intermediate: { rows: 16, columns: 16, mines_count: 40 },
+    intermediate: { rows: 16, columns: 16, mines_count: 1 },
     expert: { rows: 24, columns: 24, mines_count: 99 }
   }.freeze
 
@@ -51,6 +51,15 @@ class Game < ApplicationRecord
 
   def reveal(x,y)
     self.board_status = board.reveal(x, y)
+
+    # GAME OVER - you lost
+    if board.mine?(x,y)
+      self.over   = true
+      self.winner = false
+    elsif board.mines_remaining?
+      self.over   = true
+      self.winner = true
+    end
   end
 
   def flag(x,y)

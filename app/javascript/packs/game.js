@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-function renderGame(res) {
+function renderBoard(res) {
   $('#board').empty();
 
   const cols = res.data.attributes.columns;
@@ -52,7 +52,25 @@ function renderGame(res) {
       }
     }
   });
+}
 
+function renderResult(over, winner) {
+  $('#result').empty();
+
+  if (over) {
+    if (winner) {
+      $('#result').append('<h3>YOU WIN!</h3>');
+      $('#result').append('<img src="https://media.giphy.com/media/12yZ3KEf43DfLG/giphy.gif"></img>');
+    } else {
+      $('#result').append('<h3>YOU LOSE</h3>');
+      $('#result').append('<img src="https://media.giphy.com/media/1T96TRBBGYThC/giphy.gif"></img>');
+    }  
+  }
+}
+
+function renderGame(res) {
+  renderResult(res.data.attributes.over, res.data.attributes.winner);
+  renderBoard(res);
 }
 
 function performAction(x, y, action) {
