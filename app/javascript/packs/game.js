@@ -21,9 +21,7 @@ function renderGame(res) {
       statusClass = `status-${value}`
 
       // Don't show values in this cases
-      if (value == 'h' || value == 'f' || value == '0') {
-        value = ''
-      } 
+      if (['h', 'f', 'm', '0'].includes(value)) { value = ''; }
 
       $('#board').find(`#row-${r}`)
         .append(`<button class="cell active ${statusClass}" data-x="${r}" data-y="${c}">${value}</button>`);

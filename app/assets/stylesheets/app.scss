@@ -10,6 +10,7 @@ body {
 
 
 $board-cell-size: 24px;
+$board-cell-bg-size: 16px;
 
 #board {
   text-align: center;
@@ -32,6 +33,14 @@ $board-cell-size: 24px;
       &:not(.status-f) {
         box-shadow: inset -1px -1px #ffffff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
       }
+    }
+
+    &.status-m {
+      background: image-url("mine.jpg");
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-color: red;
+      background-size: $board-cell-bg-size $board-cell-bg-size;
     }
   }
 }
