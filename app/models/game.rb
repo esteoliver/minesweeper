@@ -39,7 +39,11 @@ class Game < ApplicationRecord
   end
 
   def visualize
-    Board.visualize(board_status.chars, board_values.chars).join
+    board.visualize
+  end
+
+  def reveal(x,y)
+    self.board_status = board.reveal(x, y)
   end
   
   private 
@@ -47,4 +51,8 @@ class Game < ApplicationRecord
   def invalid_args_to_initialize
     %i(level board board_count mines mines_count anonymous_player)
   end  
+
+  def board
+    Board.new self
+  end
 end

@@ -7,24 +7,36 @@ class Board
 
   attr_accessor :rows, :columns, :board_status, :board_values
 
-  def initialize(**args)
-    set_default_size **args.slice(:rows, :columns, :level)
-
+  def initialize(args)
     if args[:board_values].nil?
+      set_default_size args[:level]
       set_initial_board_status
       generate_mines(**args.slice(:mines_count, :level))
+    else
+      self.board_status = args[:board_status]
+      self.board_values = args[:board_values]
+      self.rows = args[:rows]
+      self.columns = args[:columns]
     end
   end
 
-  def self.visualize(status, values)
-    status.each_with_index.map { |status_cell, i| Cell.visualize(status_cell, values[i]) }
+  def visualize
+    board_status.chars.each_with_index.map do |status_cell, i| 
+      Cell.visualize(status_cell, board_values.chars[i])
+    end.join
+  end
+
+  def reveal(x, y)
+    status = board_status.chars
+    status[(x * columns) + y] = Cell::REVEALED_STATE
+    board_status = status.join
   end
 
   private
 
-  def set_default_size(rows: 0, columns: 0, level: Game::DEFAULT_LEVEL)
-    self.rows ||= Game::LEVELS[level][:rows]
-    self.columns ||= Game::LEVELS[level][:columns]
+  def set_default_size(level)
+    self.rows = Game::LEVELS[level || Game::DEFAULT_LEVEL][:rows]
+    self.columns = Game::LEVELS[level || Game::DEFAULT_LEVEL][:columns]
   end
 
   def set_initial_board_status
