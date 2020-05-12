@@ -9,7 +9,7 @@ class Game < ApplicationRecord
   DEFAULT_LEVEL = :intermediate
   LEVELS = {
     beginner: { rows: 8, columns: 8, mines_count: 10 },
-    intermediate: { rows: 16, columns: 16, mines_count: 1 },
+    intermediate: { rows: 16, columns: 16, mines_count: 40 },
     expert: { rows: 24, columns: 24, mines_count: 99 }
   }.freeze
 
