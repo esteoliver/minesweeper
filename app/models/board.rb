@@ -9,8 +9,11 @@ class Board
 
   def initialize(**args)
     set_default_size **args.slice(:rows, :columns, :level)
-    set_initial_board_status
-    generate_mines(**args.slice(:mines_count, :level))
+
+    if args[:board_values].nil?
+      set_initial_board_status
+      generate_mines(**args.slice(:mines_count, :level))
+    end
   end
 
   def self.visualize(status, values)

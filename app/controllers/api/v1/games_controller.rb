@@ -1,5 +1,9 @@
 class Api::V1::GamesController < ApiController
   def create
-    render_jsonapi Game.new
+    if player_signed_in?
+    else
+      puts @anonymous_player
+      render_jsonapi Game.create_anonymous(@anonymous_player)
+    end
   end
 end

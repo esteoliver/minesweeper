@@ -32,6 +32,12 @@ class Game < ApplicationRecord
     self.assign_attributes Board.new(**args).as_json
   end
 
+  def self.create_anonymous(anonymous_player, **args)
+    return {} if anonymous_player.nil?
+
+    AnonymousGame.set(anonymous_player, Game.new(args))
+  end
+
   def visualize
     Board.visualize(board_status.chars, board_values.chars).join
   end
@@ -39,6 +45,6 @@ class Game < ApplicationRecord
   private 
 
   def invalid_args_to_initialize
-    %i(level board board_count mines mines_count)
-  end
+    %i(level board board_count mines mines_count anonymous_player)
+  end  
 end

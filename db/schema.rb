@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_12_023930) do
+ActiveRecord::Schema.define(version: 2020_05_12_122510) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,8 +22,8 @@ ActiveRecord::Schema.define(version: 2020_05_12_023930) do
     t.string "board_status"
     t.string "board_values"
     t.boolean "over", default: false
-    t.boolean "winner"
-    t.integer "time"
+    t.boolean "winner", default: false
+    t.integer "time", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["player_id"], name: "index_games_on_player_id"
