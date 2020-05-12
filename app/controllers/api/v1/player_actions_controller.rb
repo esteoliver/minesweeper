@@ -1,7 +1,6 @@
 class Api::V1::PlayerActionsController < ApiController
 
   def create
-    puts params
     if player_signed_in?
     else
       game = Action.perform(@anonymous_player, 

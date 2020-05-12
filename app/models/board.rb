@@ -22,17 +22,36 @@ class Board
 
   def visualize
     board_status.chars.each_with_index.map do |status_cell, i| 
-      Cell.visualize(status_cell, board_values.chars[i])
+      Cell.visualize(status_cell, values[i])
     end.join
   end
 
   def reveal(x, y)
-    status = board_status.chars
-    status[(x * columns) + y] = Cell::REVEALED_STATE
+    return board_status if revealed?(x, y)
+
+    reveal_cell(x, y)
     board_status = status.join
   end
 
+  def reveal_cell(x, y)
+    return if revealed?(x, y)
+
+    status[(x * columns) + y] = Cell::REVEALED_STATE
+    reveal_surroundings(x, y) if is_blank?(x, y)
+  end
+
   private
+
+  ## Cell logics
+  def is_blank?(x, y)
+    Cell.is_blank? values[(x * columns) + y]
+  end
+
+  def revealed?(x, y)
+    Cell.revealed? status[(x * columns) + y]
+  end
+
+  ## Build
 
   def set_default_size(level)
     self.rows = Game::LEVELS[level || Game::DEFAULT_LEVEL][:rows]
@@ -57,7 +76,7 @@ class Board
       posx = pos / columns
       posy = pos - (posx * columns)
 
-      tracker[posx][posy] = "M"
+      tracker[posx][posy] = Cell::MINE_VALUE
     end
 
     self.board_values = tracker.map { |row| row.join }.join
@@ -89,5 +108,36 @@ class Board
       
     tracker[x][y-1] += 1 if y > 0
     tracker[x][y+1] += 1 if y < (columns - 1)
+  end
+
+  # Utilities
+
+  def reveal_surroundings(x, y)
+    surroundings = []
+
+    if x > 0
+      surroundings.push([x-1, y-1]) if y > 0
+      surroundings.push([x-1, y])
+      surroundings.push([x-1, y+1]) if y < (columns - 1)
+    end
+
+    if x < (rows - 1)
+      surroundings.push([x+1, y-1]) if y > 0
+      surroundings.push([x+1, y])
+      surroundings.push([x+1, y+1]) if y < (columns - 1)
+    end
+      
+    surroundings.push([x, y-1]) if y > 0
+    surroundings.push([x, y+1]) if y < (columns - 1)
+
+    surroundings.each { |pair| reveal_cell(pair[0], pair[1]) }
+  end
+
+  def values
+    @values ||= board_values.chars
+  end
+
+  def status
+    @status ||= board_status.chars
   end
 end
