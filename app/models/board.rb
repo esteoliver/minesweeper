@@ -13,6 +13,10 @@ class Board
     generate_mines(**args.slice(:mines_count, :level))
   end
 
+  def self.visualize(status, values)
+    status.each_with_index.map { |status_cell, i| Cell.visualize(status_cell, values[i]) }
+  end
+
   private
 
   def set_default_size(rows: 0, columns: 0, level: Game::DEFAULT_LEVEL)

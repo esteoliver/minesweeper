@@ -32,6 +32,10 @@ class Game < ApplicationRecord
     self.assign_attributes Board.new(**args).as_json
   end
 
+  def visualize
+    Board.visualize(board_status.chars, board_values.chars).join
+  end
+  
   private 
 
   def invalid_args_to_initialize
