@@ -42,5 +42,12 @@ $board-cell-bg-size: 16px;
       background-color: red;
       background-size: $board-cell-bg-size $board-cell-bg-size;
     }
+
+    &.status-f {
+      background: image-url("flag.png");
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: $board-cell-bg-size $board-cell-bg-size;
+    }
   }
 }

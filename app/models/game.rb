@@ -52,6 +52,14 @@ class Game < ApplicationRecord
   def reveal(x,y)
     self.board_status = board.reveal(x, y)
   end
+
+  def flag(x,y)
+    self.board_status = board.flag(x, y)
+  end
+
+  def unflag(x,y)
+    self.board_status = board.unflag(x, y)
+  end
   
   private 
 

@@ -21,10 +21,12 @@ function renderGame(res) {
       statusClass = `status-${value}`
 
       // Don't show values in this cases
-      if (['h', 'f', 'm', '0'].includes(value)) { value = ''; }
+      if (['h', 'f', 'm', '0'].includes(value)) {
+        value = '';
+      }
 
       $('#board').find(`#row-${r}`)
-        .append(`<button class="cell active ${statusClass}" data-x="${r}" data-y="${c}">${value}</button>`);
+        .append(`<button class="cell active ${statusClass}" data-x="${r}" data-y="${c}" oncontextmenu="return false;">${value}</button>`);
       c += 1;
     }
     r += 1;
@@ -38,14 +40,31 @@ function renderGame(res) {
       performAction(data.x, data.y, 'reveal');
     }
   });
+
+  $('#board').find('.cell').mousedown((e) => {
+    e.stopPropagation();
+    if (e.which == 3) {
+      const data = $(e.target).data();
+      if ($(e.target).hasClass('status-f')) {
+        performAction(data.x, data.y, 'unflag');
+      } else {
+        performAction(data.x, data.y, 'flag');
+      }
+    }
+  });
+
 }
 
-function performAction(x,y, action) {
+function performAction(x, y, action) {
   $.ajax({
     type: "POST",
     url: 'http://localhost:3000/api/v1/player_actions',
     data: {
-      player_action: { x, y, action }
+      player_action: {
+        x,
+        y,
+        action
+      }
     },
     success: renderGame,
     dataType: 'json'
@@ -69,7 +88,6 @@ $(document).ready(() => {
     e.stopPropagation();
     getGame(true);
   });
-  
-  
-  getGame();  
+
+  getGame();
 });

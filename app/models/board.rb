@@ -33,6 +33,20 @@ class Board
     board_status = status.join
   end
 
+  def flag(x, y)
+    return board_status if revealed?(x, y)
+
+    status[(x * columns) + y] = Cell::FLAG_STATE
+    board_status = status.join
+  end
+
+  def unflag(x, y)
+    return board_status if revealed?(x, y)
+
+    status[(x * columns) + y] = Cell::HIDDEN_STATE
+    board_status = status.join
+  end
+
   def reveal_cell(x, y)
     return if revealed?(x, y)
 
