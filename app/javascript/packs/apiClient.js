@@ -6,7 +6,7 @@ function post(url, data, cb) {
     type: "POST",
     url: url,
     data: data,
-    success: cb,
+    complete: cb,
     dataType: 'json'
   });
 }
@@ -16,7 +16,7 @@ function put(url, data, cb) {
     type: "PUT",
     url: url,
     data: data,
-    success: cb,
+    complete: cb,
     dataType: 'json'
   });
 }
@@ -25,7 +25,7 @@ function get(url, cb) {
   $.ajax({
     type: "GET",
     url: url,
-    success: cb,
+    complete: cb,
     dataType: 'json'
   });
 }
