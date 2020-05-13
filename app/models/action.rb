@@ -6,7 +6,16 @@ class Action
 
     if game_id.nil?
       game = AnonymousGame.get(player)
-      game.reveal(x.to_i, y.to_i)
+
+      return game if game.over?
+
+      if action == 'reveal'
+        game.reveal(x.to_i, y.to_i)
+      elsif action == 'flag'
+        game.flag(x.to_i, y.to_i)
+      elsif action == 'unflag'
+        game.unflag(x.to_i, y.to_i)
+      end
       AnonymousGame.set(player, game)
     end
 

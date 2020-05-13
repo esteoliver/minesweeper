@@ -21,18 +21,66 @@ class Board
   end
 
   def visualize
-    board_status.chars.each_with_index.map do |status_cell, i| 
-      Cell.visualize(status_cell, board_values.chars[i])
+    board_status.chars.each_with_index.map do |status_cell, i|
+      Cell.visualize(status_cell, values[i])
     end.join
   end
 
   def reveal(x, y)
-    status = board_status.chars
-    status[(x * columns) + y] = Cell::REVEALED_STATE
+    return board_status if revealed?(x, y)
+
+    reveal_cell(x, y)
     board_status = status.join
   end
 
+  def reveal_all
+    self.board_status = Cell::REVEALED_STATE * (rows * columns)
+  end
+
+  def flag(x, y)
+    return board_status if revealed?(x, y)
+
+    status[(x * columns) + y] = Cell::FLAG_STATE
+    board_status = status.join
+  end
+
+  def unflag(x, y)
+    return board_status if revealed?(x, y)
+
+    status[(x * columns) + y] = Cell::HIDDEN_STATE
+    board_status = status.join
+  end
+
+  def reveal_cell(x, y)
+    return if revealed?(x, y)
+
+    status[(x * columns) + y] = Cell::REVEALED_STATE
+    reveal_surroundings(x, y) if is_blank?(x, y)
+  end
+
+  ## Cell logics
+  def mine?(x, y)
+    Cell.mine? values[(x * columns) + y]
+  end
+
+  def mines_remaining?
+    (0..status.size-1).all? do |i|
+      Cell.mine?(values[i]) || Cell.revealed?(status[i])
+    end
+  end
+
   private
+
+  ## Cell logics
+  def is_blank?(x, y)
+    Cell.is_blank? values[(x * columns) + y]
+  end
+
+  def revealed?(x, y)
+    Cell.revealed? status[(x * columns) + y]
+  end
+
+  ## Build
 
   def set_default_size(level)
     self.rows = Game::LEVELS[level || Game::DEFAULT_LEVEL][:rows]
@@ -45,7 +93,7 @@ class Board
 
   def generate_mines(mines_count: nil, level: Game::DEFAULT_LEVEL)
     tracker = Array.new(rows).map { |_| Array.new(columns, 0) }
-    mines = pick_mine_location.take(mines_count || Game::LEVELS[level][:mines_count])
+    mines = pick_mine_location(mines_count || Game::LEVELS[level][:mines_count])
 
     mines.each do |pos|
                 posx = pos / columns
@@ -57,21 +105,14 @@ class Board
       posx = pos / columns
       posy = pos - (posx * columns)
 
-      tracker[posx][posy] = "M"
+      tracker[posx][posy] = Cell::MINE_VALUE
     end
 
     self.board_values = tracker.map { |row| row.join }.join
   end
 
-  def pick_mine_location
-    cells = Array (0..((rows * columns) - 1))
-    Enumerator.new do |y|
-      loop do
-        picked = rand(cells.size)
-        y << cells[picked]
-        cells.delete(picked)
-      end
-    end
+  def pick_mine_location(size)
+    (0..((rows * columns) - 1)).to_a.sample(size)
   end
 
   def increase_counters(tracker, x, y)
@@ -89,5 +130,36 @@ class Board
       
     tracker[x][y-1] += 1 if y > 0
     tracker[x][y+1] += 1 if y < (columns - 1)
+  end
+
+  # Utilities
+
+  def reveal_surroundings(x, y)
+    surroundings = []
+
+    if x > 0
+      surroundings.push([x-1, y-1]) if y > 0
+      surroundings.push([x-1, y])
+      surroundings.push([x-1, y+1]) if y < (columns - 1)
+    end
+
+    if x < (rows - 1)
+      surroundings.push([x+1, y-1]) if y > 0
+      surroundings.push([x+1, y])
+      surroundings.push([x+1, y+1]) if y < (columns - 1)
+    end
+      
+    surroundings.push([x, y-1]) if y > 0
+    surroundings.push([x, y+1]) if y < (columns - 1)
+
+    surroundings.each { |pair| reveal_cell(pair[0], pair[1]) }
+  end
+
+  def values
+    @values ||= board_values.chars
+  end
+
+  def status
+    @status ||= board_status.chars
   end
 end

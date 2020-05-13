@@ -51,6 +51,25 @@ class Game < ApplicationRecord
 
   def reveal(x,y)
     self.board_status = board.reveal(x, y)
+
+    if board.mine?(x,y)
+      # GAME OVER - you lost
+      self.over   = true
+      self.winner = false
+      self.board_status = board.reveal_all
+    elsif board.mines_remaining?
+      # GAME OVER - you win!
+      self.over   = true
+      self.winner = true
+    end
+  end
+
+  def flag(x,y)
+    self.board_status = board.flag(x, y)
+  end
+
+  def unflag(x,y)
+    self.board_status = board.unflag(x, y)
   end
   
   private 

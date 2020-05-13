@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-function renderGame(res) {
+function renderBoard(res) {
   $('#board').empty();
 
   const cols = res.data.attributes.columns;
@@ -21,12 +21,12 @@ function renderGame(res) {
       statusClass = `status-${value}`
 
       // Don't show values in this cases
-      if (value == 'h' || value == 'f' || value == '0') {
-        value = ''
-      } 
+      if (['h', 'f', 'm', '0'].includes(value)) {
+        value = '';
+      }
 
       $('#board').find(`#row-${r}`)
-        .append(`<button class="cell active ${statusClass}" data-x="${r}" data-y="${c}">${value}</button>`);
+        .append(`<button class="cell active ${statusClass}" data-x="${r}" data-y="${c}" oncontextmenu="return false;">${value}</button>`);
       c += 1;
     }
     r += 1;
@@ -40,29 +40,72 @@ function renderGame(res) {
       performAction(data.x, data.y, 'reveal');
     }
   });
+
+  $('#board').find('.cell').mousedown((e) => {
+    e.stopPropagation();
+    if (e.which == 3) {
+      const data = $(e.target).data();
+      if ($(e.target).hasClass('status-f')) {
+        performAction(data.x, data.y, 'unflag');
+      } else {
+        performAction(data.x, data.y, 'flag');
+      }
+    }
+  });
 }
 
-function performAction(x,y, action) {
+function renderResult(over, winner) {
+  $('#result').empty();
+
+  if (over) {
+    if (winner) {
+      $('#result').append('<h3>YOU WIN!</h3>');
+      $('#result').append('<img src="https://media.giphy.com/media/12yZ3KEf43DfLG/giphy.gif"></img>');
+    } else {
+      $('#result').append('<h3>YOU LOSE</h3>');
+      $('#result').append('<img src="https://media.giphy.com/media/1T96TRBBGYThC/giphy.gif"></img>');
+    }  
+  }
+}
+
+function renderGame(res) {
+  renderResult(res.data.attributes.over, res.data.attributes.winner);
+  renderBoard(res);
+}
+
+function performAction(x, y, action) {
   $.ajax({
     type: "POST",
     url: 'http://localhost:3000/api/v1/player_actions',
     data: {
-      player_action: { x, y, action }
+      player_action: {
+        x,
+        y,
+        action
+      }
     },
     success: renderGame,
     dataType: 'json'
   });
 }
 
-function getGame() {
+function getGame(reset = null) {
   $.ajax({
     type: "POST",
     url: 'http://localhost:3000/api/v1/games',
-    data: {},
+    data: {
+      new: reset
+    },
     success: renderGame,
     dataType: 'json'
   });
 }
 
-getGame();
+$(document).ready(() => {
+  $('#new-game').on('click', e => {
+    e.stopPropagation();
+    getGame(true);
+  });
 
+  getGame();
+});
