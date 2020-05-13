@@ -58,6 +58,8 @@ function renderResult(over, winner) {
   $('#result').empty();
 
   if (over) {
+    $('#window-result').css({ display: "block" });
+
     if (winner) {
       $('#result').append('<h3>YOU WIN!</h3>');
       $('#result').append('<img src="https://media.giphy.com/media/12yZ3KEf43DfLG/giphy.gif"></img>');
@@ -65,6 +67,8 @@ function renderResult(over, winner) {
       $('#result').append('<h3>YOU LOSE</h3>');
       $('#result').append('<img src="https://media.giphy.com/media/1T96TRBBGYThC/giphy.gif"></img>');
     }  
+  } else {
+    $('#window-result').css({ display: "none" });
   }
 }
 

@@ -5,7 +5,17 @@
 $bg-color: #C0C0C0;
 
 body {
+  min-height: 768px;
+  min-width: 1366px;
+  max-height: 768px;
+  max-width: 1366px;
   background: $bg-color;
+  background: image-url("wallpaper.png");
+  background-size: 1366px 768px;
+  background-color: black;
+  background-repeat: no-repeat;
+  overflow-y: scroll;
+  overflow-x: scroll;
 }
 
 
@@ -59,4 +69,17 @@ $board-cell-bg-size: 16px;
       }
     }    
   }
+}
+
+.window .window-body {
+  min-height: 600px;
+  max-height: 600px;
+  overflow: auto;
+}
+
+#window-result {
+  display: none;
+  position: absolute;
+  left: 115px;
+  top: 200px;
 }
