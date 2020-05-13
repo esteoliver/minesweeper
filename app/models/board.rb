@@ -33,6 +33,10 @@ class Board
     board_status = status.join
   end
 
+  def reveal_all
+    self.board_status = Cell::REVEALED_STATE * (rows * columns)
+  end
+
   def flag(x, y)
     return board_status if revealed?(x, y)
 
@@ -89,7 +93,7 @@ class Board
 
   def generate_mines(mines_count: nil, level: Game::DEFAULT_LEVEL)
     tracker = Array.new(rows).map { |_| Array.new(columns, 0) }
-    mines = pick_mine_location.take(mines_count || Game::LEVELS[level][:mines_count])
+    mines = pick_mine_location(mines_count || Game::LEVELS[level][:mines_count])
 
     mines.each do |pos|
                 posx = pos / columns
@@ -107,15 +111,8 @@ class Board
     self.board_values = tracker.map { |row| row.join }.join
   end
 
-  def pick_mine_location
-    cells = Array (0..((rows * columns) - 1))
-    Enumerator.new do |y|
-      loop do
-        picked = rand(cells.size)
-        y << cells[picked]
-        cells.delete(picked)
-      end
-    end
+  def pick_mine_location(size)
+    (0..((rows * columns) - 1)).to_a.sample(size)
   end
 
   def increase_counters(tracker, x, y)
