@@ -6,6 +6,8 @@ class Player < ApplicationRecord
          :rememberable, 
          :validatable
 
+  has_many :games
+
   validates :nickname, uniqueness: true
 
   # not using emails
@@ -20,5 +22,9 @@ class Player < ApplicationRecord
 
   def will_save_change_to_email?
     false
+  end
+
+  def current_game
+    games.order(updated_at: :desc).first
   end
 end

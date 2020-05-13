@@ -13,7 +13,7 @@ class Action
       game.unflag(x.to_i, y.to_i)
     end
 
-    AnonymousGame.set(player, game) if game.id.nil?
+    game.id.nil? ? AnonymousGame.set(player, game) : game.save!
 
     game
   end

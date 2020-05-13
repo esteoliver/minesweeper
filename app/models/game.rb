@@ -5,6 +5,7 @@
 #   Intermediate (16x16, 40 mines)
 #   Expert (24x24, 99 mines)  
 class Game < ApplicationRecord
+  belongs_to :player
 
   DEFAULT_LEVEL = :intermediate
   LEVELS = {

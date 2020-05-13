@@ -3,25 +3,28 @@ class Api::V1::PlayerActionsController < ApiController
   before_action :set_game
 
   def reveal
+    game = perform_action('reveal')
     if player_signed_in?
+      render_jsonapi game
     else
-      game = perform_action('reveal')
       render json: Api::V1::GameSerializer.new(game).to_json
     end
   end
 
   def flag
+    game = perform_action('flag')
     if player_signed_in?
+      render_jsonapi game
     else
-      game = perform_action('flag')
       render json: Api::V1::GameSerializer.new(game).to_json
     end
   end
 
   def unflag
+    game = perform_action('unflag')
     if player_signed_in?
+      render_jsonapi game
     else
-      game = perform_action('unflag')
       render json: Api::V1::GameSerializer.new(game).to_json
     end
   end
@@ -43,17 +46,14 @@ class Api::V1::PlayerActionsController < ApiController
   end
 
   def find_game
-    if player_signed_in?
-      Game.new
-    else
-      Game.find_anonymous(@anonymous_player)
+    if current_game?
+      player_signed_in? ? current_player.current_game : Game.find_anonymous(@anonymous_player)
     end
   end
 
   def current_game?
     params[:id] == 'current'
   end
-
 
   def action_params
     params.require(:player_action).permit(:x, :y)

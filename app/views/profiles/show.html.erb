@@ -14,8 +14,14 @@
       <h4 class="my-0">Welcome <%= current_player.nickname %>! </h4>
       <hr>
 
-      <div>
-        <button class="float-right">
+      <div class="mb-5 d-flex">
+        <div class="flex-fill">
+          <button>
+            <%= link_to 'Play Now', play_path %>
+          </button>
+        </div>
+
+        <button>
           <%= link_to('Logout', destroy_player_session_path, method: :delete) %>
         </button>
       </div>

@@ -14,7 +14,15 @@
       <h3 class="my-0">Play</h3>
       <hr>
 
-      <button id="new-game">Start new game</button>
+      <div class="mb-5 d-flex">
+        <div class="flex-fill">
+          <button id="new-game">Start new game</button>
+        </div>
+
+        <button>
+          <%= link_to 'Back', root_path %>
+        </button>
+      </div>      
 
       <div id="board" class="d-flex flex-column align-items-center pt-4"></div>
     </div>

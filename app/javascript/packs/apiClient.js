@@ -51,7 +51,7 @@ function apiGame(baseUrl) {
     flagCurrent: (x, y, cb) => { apiGame(baseUrl).flag('current', x, y, cb) },
     flag: (gameId, x, y, cb) => { put(`${baseUrl}/games/${gameId}/flag`, { player_action: {x, y} }, cb) },
     // POST /api/v1/games/current/unflag - Perform actions on the game
-    unflagCurrent: (x, y, cb) => { apiGame(baseUrl).unflag('unflag', x, y, cb) },
+    unflagCurrent: (x, y, cb) => { apiGame(baseUrl).unflag('current', x, y, cb) },
     unflag: (gameId, x, y, cb) => { put(`${baseUrl}/games/${gameId}/unflag`, { player_action: {x, y} }, cb) },
   }
 }
