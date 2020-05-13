@@ -15,8 +15,13 @@ Rails.application.routes.draw do
   defaults format: :json do
     namespace :api do
       namespace :v1 do
-        resources :games, only: :create
-        resources :player_actions, only: :create
+        resources :games, only: [:create, :show, :index] do
+          member do
+            put 'reveal', to: 'player_actions#reveal'
+            put 'flag', to: 'player_actions#flag'
+            put 'unflag', to: 'player_actions#unflag'
+          end
+        end
       end
     end
   end

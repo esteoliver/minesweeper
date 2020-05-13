@@ -1,4 +1,7 @@
+import apiClient from "./apiClient";
 import $ from 'jquery';
+
+console.log(apiClient)
 
 function renderBoard(res) {
   $('#board').empty();
@@ -78,31 +81,11 @@ function renderGame(res) {
 }
 
 function performAction(x, y, action) {
-  $.ajax({
-    type: "POST",
-    url: 'http://localhost:3000/api/v1/player_actions',
-    data: {
-      player_action: {
-        x,
-        y,
-        action
-      }
-    },
-    success: renderGame,
-    dataType: 'json'
-  });
+  apiClient.game[`${action}Current`](x, y, renderGame);
 }
 
 function getGame(reset = null) {
-  $.ajax({
-    type: "POST",
-    url: 'http://localhost:3000/api/v1/games',
-    data: {
-      new: reset
-    },
-    success: renderGame,
-    dataType: 'json'
-  });
+  apiClient.game.create({new: reset}, renderGame)
 }
 
 $(document).ready(() => {

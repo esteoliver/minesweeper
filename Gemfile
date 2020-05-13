@@ -62,6 +62,8 @@ gem 'fast_jsonapi'
 # redis API client
 gem 'redis'
 gem 'redis-namespace'
+# Use for pagination
+gem 'kaminari'
 
 # environment variables
 gem 'dotenv-rails', groups: [:development, :test]

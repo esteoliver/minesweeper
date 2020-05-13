@@ -45,6 +45,12 @@ class Game < ApplicationRecord
     create_anonymous(anonymous_player, args)
   end
 
+  def self.find_anonymous(anonymous_player, **args)
+    raise_no_current_game! unless AnonymousGame.exists(anonymous_player)
+    
+    AnonymousGame.get(anonymous_player)
+  end
+
   def visualize
     board.visualize
   end
@@ -80,5 +86,9 @@ class Game < ApplicationRecord
 
   def board
     Board.new self.attributes.with_indifferent_access
+  end
+
+  def self.raise_no_current_game!
+    raise ActiveRecord::RecordNotFound.new("No current game available", "game", "id", "current")
   end
 end

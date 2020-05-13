@@ -9,7 +9,7 @@ module ApiErrorHandling
       render json: {
         errors: [
           {
-            title: "#{error.model.capitalize} not found",
+            title: error.message,
             status: '404',
             detail: "Couldn\'t found #{error.model.downcase} with #{error.primary_key} = #{error.id}"
           }
