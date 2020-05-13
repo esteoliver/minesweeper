@@ -16,8 +16,8 @@
 
       <div class="mb-5 d-flex">
         <div class="flex-fill">
-          <button>
-            <%= link_to 'Play Now', play_path %>
+          <button id="new-game">
+            <%= link_to 'New game', play_path(new: true) %>
           </button>
         </div>
 
@@ -25,6 +25,14 @@
           <%= link_to('Logout', destroy_player_session_path, method: :delete) %>
         </button>
       </div>
+
+      <div class="">
+        <dl id="game-list"></dl>   
+      </div>
+
+      <div class="py-3" id="game-list-pages"></div>
     </div>
   </div>
 </div>
+
+<%= javascript_pack_tag "profile" %>

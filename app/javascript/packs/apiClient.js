@@ -31,19 +31,21 @@ function get(url, cb) {
 }
 
 // TO IMPLEMENT
-// GET /api/v1/games/{gameId} - Get the game from the player
 // PUT /api/v1/games/current/stop
 // PUT /api/v1/games/{gameId}/stop - Stop a game
 // PUT /api/v1/games/current/restart
 // PUT /api/v1/games/{gameId}/restart - Restart a game
-// GET /api/v1/games - My list of games (non-anonymous)
 
 function apiGame(baseUrl) {
   return {
+    // GET /api/v1/games - My list of games (non-anonymous)
+    list: (cb, page = 1) => { get(`${baseUrl}/games?page=${page}`, cb) },
     // POST /api/v1/games - Start a new game
     create: (data, cb) => { post(`${baseUrl}/games`, {}, cb) },
+    // GET /api/v1/games/{gameId} - Get indicated game
+    get: (gameId, cb) => { get(`${baseUrl}/games/${gameId}`, cb) },
     // GET /api/v1/games/current - Get the most recent game
-    getCurrent: (cb) => { get(`${baseUrl}/games/current`, cb) },
+    getCurrent: (cb) => { apiGame(baseUrl).get('current', cb) },
     // POST /api/v1/games/current/reveal
     revealCurrent: (x, y, cb) => { apiGame(baseUrl).reveal('current', x, y, cb) },
     reveal: (gameId, x, y, cb) => { put(`${baseUrl}/games/${gameId}/reveal`, { player_action: {x, y} }, cb) },

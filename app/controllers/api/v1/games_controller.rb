@@ -1,12 +1,23 @@
 class Api::V1::GamesController < ApiController
   def index
     render_jsonapi Game.none unless player_signed_in?
+
+    render_jsonapi current_player.games.order(updated_at: :desc), page: params[:page]
   end
 
   def show
     if current?
-      render_jsonapi Game.find_anonymous(@anonymous_player) unless player_signed_in?
-      render_jsonapi current_player.current_game
+      if player_signed_in?
+        render_jsonapi current_player.current_game
+      else
+        render_jsonapi Game.find_anonymous(@anonymous_player)
+      end
+    else
+      if player_signed_in?
+        render_jsonapi current_player.games.find(params[:id]) 
+      else
+        render json: :unauthorized
+      end
     end
   end
 

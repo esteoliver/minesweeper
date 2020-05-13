@@ -13,4 +13,8 @@ class Api::V1::GameSerializer
   attribute :display do |object|
     object.visualize
   end
+
+  attribute :last_time_played do |object|
+    object.updated_at
+  end
 end

@@ -83,3 +83,19 @@ $board-cell-bg-size: 16px;
   left: 115px;
   top: 200px;
 }
+
+#game-list-pages {
+  clear: both;
+}
+
+dl { width: 500px }
+dt { 
+  float: left; 
+  width: 300px; 
+  overflow: hidden; 
+  white-space: nowrap;
+  margin-bottom: 10px;
+}
+dd { float: left; width: 200px; overflow: hidden; margin: 0 }
+
+dt:after { content: " ...................................................................................................................................................................." }
