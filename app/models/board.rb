@@ -1,17 +1,16 @@
 class Board
-  MIN_ROWS  = 8
+  MIN_ROWS  = 2
   MAX_ROWS  = 48
-  MIN_COLS  = 8
+  MIN_COLS  = 2
   MAX_COLS  = 48
-  MIN_MINES = 10
 
   attr_accessor :rows, :columns, :board_status, :board_values
 
   def initialize(args)
     if args[:board_values].nil?
-      set_default_size args[:level]
+      set_default_size(args[:level]&.to_sym, args[:rows], args[:columns])
       set_initial_board_status
-      generate_mines(**args.slice(:mines_count, :level))
+      generate_mines(args[:mines], args[:level]&.to_sym)
     else
       self.board_status = args[:board_status]
       self.board_values = args[:board_values]
@@ -82,18 +81,35 @@ class Board
 
   ## Build
 
-  def set_default_size(level)
-    self.rows = Game::LEVELS[level || Game::DEFAULT_LEVEL][:rows]
-    self.columns = Game::LEVELS[level || Game::DEFAULT_LEVEL][:columns]
+  def set_default_size(level, rows, columns)
+    rows ||= 0
+    columns ||= 0
+
+    if Game::LEVELS.keys.include? level
+      self.rows = Game::LEVELS[level || Game::DEFAULT_LEVEL][:rows]
+      self.columns = Game::LEVELS[level || Game::DEFAULT_LEVEL][:columns]
+    else
+      self.rows = (rows.is_a?(String) ? rows.to_i : rows)
+      self.columns = (columns.is_a?(String) ? columns.to_i : columns)
+    end
   end
 
   def set_initial_board_status
     self.board_status = Cell::HIDDEN_STATE * (rows * columns)
   end
 
-  def generate_mines(mines_count: nil, level: Game::DEFAULT_LEVEL)
+  def generate_mines(mines_count, level)
+    level ||= Game::DEFAULT_LEVEL
+
+    if Game::LEVELS.keys.include? level
+      mines_count ||= Game::LEVELS[level][:mines_count]
+    else
+      mines_count ||= 0
+    end
+    mines_count = (mines_count.is_a?(String) ? mines_count.to_i : mines_count)
+
     tracker = Array.new(rows).map { |_| Array.new(columns, 0) }
-    mines = pick_mine_location(mines_count || Game::LEVELS[level][:mines_count])
+    mines = pick_mine_location(mines_count)
 
     mines.each do |pos|
                 posx = pos / columns

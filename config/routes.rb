@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   root "app#landing"
 
   get 'play', to: 'app#play'
+  get 'game', to: 'app#game'
   get 'profiles/me', to: 'profiles#show'
 
   devise_for :players

@@ -1,0 +1,65 @@
+<div class="row d-flex justify-content-center">
+  <div class="col-4 p-1 window">
+
+    <div class="title-bar">
+      <div class="title-bar-text">Minesweeper - The greatest game!</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize"></button>
+        <button aria-label="Maximize"></button>
+        <button aria-label="Close"></button>
+      </div>
+    </div>
+
+    <div class="window-body to-content p-4">
+      <h3 class="my-0">Game</h3>
+      <hr>
+
+      <div class="mb-5 d-flex">
+        <div class="flex-fill">
+          <button id="new-game">Start new game</button>
+        </div>
+
+        <button>
+          <%= link_to 'Back', root_path %>
+        </button>
+      </div>
+
+      <fieldset class="py-2">
+        <div class="field-row">Game mode:</div>
+        <div class="field-row">
+          <input id="beginner" type="radio" name="level" value="beginner">
+          <label for="beginner">Beginner (8x8)</label>
+        </div>
+        <div class="field-row">
+          <input id="intermediate" type="radio" name="level" value="intermediate" checked>
+          <label for="intermediate">Intermediate (16x16)</label>
+        </div>
+        <div class="field-row">
+          <input id="expert" type="radio" name="level" value="expert">
+          <label for="expert">Expert (24x24)</label>
+        </div>
+        <div class="field-row">
+          <input id="custom" type="radio" name="level" value="custom">
+          <label for="custom">Custom (min: 2, max: 48)</label>
+        </div>
+        <div class="field-row pl-3">
+          <label for="custom-rows" style="min-width: 50px">rows</label>
+          <input id="custom-rows" name="rows" type="number" disabled/>
+        </div>
+        <div class="field-row pl-3">
+          <label for="custom-cols" style="min-width: 50px">columns</label>
+          <input id="custom-cols" name="columns" type="number" disabled/>
+        </div>
+        <div class="field-row pl-3">
+          <label for="custom-mines" style="min-width: 50px">mines</label>
+          <input id="custom-mines" name="mines" type="number" disabled/>
+          <span>min: 1 / max: (rows * columns) - 1 </span>
+        </div>
+      </fieldset>
+
+      <div id="message" class="py-2"></div>
+    </div>
+  </div>
+</div>
+
+<%= javascript_pack_tag "game" %>

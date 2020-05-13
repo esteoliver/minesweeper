@@ -5,7 +5,7 @@
 #   Intermediate (16x16, 40 mines)
 #   Expert (24x24, 99 mines)  
 class Game < ApplicationRecord
-  belongs_to :player
+  belongs_to :player, optional: true
 
   DEFAULT_LEVEL = :intermediate
   LEVELS = {
@@ -82,7 +82,7 @@ class Game < ApplicationRecord
   private 
 
   def invalid_args_to_initialize
-    %i(level mines_count anonymous_player)
+    %i(level mines mines_count anonymous_player)
   end  
 
   def board

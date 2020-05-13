@@ -22,6 +22,9 @@ class Api::V1::GamesController < ApiController
   end
 
   def create
+    game = Game.new(game_params)
+    game.validate!
+
     if player_signed_in?
       render_jsonapi Game.create(player: current_player)
     else
@@ -30,6 +33,10 @@ class Api::V1::GamesController < ApiController
   end
 
   private
+
+  def game_params
+    params.require(:game).permit(:level, :rows, :columns, :mines)
+  end
 
   def current?
     params[:id] == 'current'

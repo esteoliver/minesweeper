@@ -4,6 +4,21 @@ module ApiErrorHandling
   included do
 
     rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
+    rescue_from ActiveRecord::RecordInvalid, :with => :record_invalid
+
+    def record_invalid(error)
+      puts pp error
+      render json: {
+        errors: [
+          {
+            title: "Invalid record",
+            status: '422',
+            detail: error.message
+          }
+        ],
+        data: []
+      }, status: :unprocessable_entity
+    end
 
     def record_not_found(error)
       render json: {
