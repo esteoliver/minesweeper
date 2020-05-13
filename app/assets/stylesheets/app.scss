@@ -71,7 +71,7 @@ $board-cell-bg-size: 16px;
   }
 }
 
-.window .window-body {
+.window .window-body:not(.to-content) {
   min-height: 600px;
   max-height: 600px;
   overflow: auto;

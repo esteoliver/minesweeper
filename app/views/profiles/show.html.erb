@@ -1,4 +1,24 @@
-<h1>Welcome <%= current_player.nickname %> </h1>
+<div class="row d-flex justify-content-center">
+  <div class="col-5 p-1 window">
+    <div class="title-bar">
+      <div class="title-bar-text">Minesweeper - The greatest game!</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize"></button>
+        <button aria-label="Maximize"></button>
+        <button aria-label="Close"></button>
+      </div>
+    </div>
 
+    <div class="window-body to-content p-4">
 
-<%= link_to('Logout', destroy_player_session_path, method: :delete) %>
+      <h4 class="my-0">Welcome <%= current_player.nickname %>! </h4>
+      <hr>
+
+      <div>
+        <button class="float-right">
+          <%= link_to('Logout', destroy_player_session_path, method: :delete) %>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
