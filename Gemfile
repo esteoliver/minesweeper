@@ -62,3 +62,6 @@ gem 'fast_jsonapi'
 # redis API client
 gem 'redis'
 gem 'redis-namespace'
+
+# environment variables
+gem 'dotenv-rails', groups: [:development, :test]
