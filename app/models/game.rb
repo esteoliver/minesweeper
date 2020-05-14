@@ -23,6 +23,7 @@ class Game < ApplicationRecord
     def create_anonymous(attrs)
       player = attrs.delete('player')
       game = Game.new(attrs)
+      game.created_at = DateTime.now
       game.validate!
       AnonymousGame.set(player, game)
     end
@@ -71,10 +72,12 @@ class Game < ApplicationRecord
       self.over   = true
       self.winner = false
       self.board_status = board.reveal_all
+      self.time = (Time.zone.now - created_at).ceil
     elsif board.mines_remaining?
       # GAME OVER - you win!
       self.over   = true
       self.winner = true
+      self.time = (Time.zone.now - created_at).ceil 
     end
   end
 
@@ -85,12 +88,12 @@ class Game < ApplicationRecord
   def unflag(x,y)
     self.board_status = board.unflag(x, y)
   end
-  
-  private 
 
   def board
     Board.new self.attributes.merge(level: 'custom').with_indifferent_access
   end
+  
+  private 
 
   def self.raise_no_current_game!
     raise ActiveRecord::RecordNotFound.new("No current game available", "game", "id", "current")

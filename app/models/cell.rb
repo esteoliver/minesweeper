@@ -21,6 +21,10 @@ class Cell
     state == REVEALED_STATE
   end
 
+  def self.flag?(state)
+    state == FLAG_STATE
+  end
+
   def self.mine?(value)
     value == MINE_VALUE
   end

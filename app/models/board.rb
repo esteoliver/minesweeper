@@ -86,6 +86,14 @@ class Board
   end
 
   ###### CELLS
+  def total_mines
+    values.count { |v| Cell.mine? v }
+  end
+
+  def total_flags
+    status.count { |v| Cell.flag? v }
+  end
+
   def mine?(x, y)
     Cell.mine? values[(x * columns) + y]
   end

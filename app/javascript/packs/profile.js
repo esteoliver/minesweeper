@@ -2,13 +2,22 @@ import apiClient from "./apiClient";
 import $ from 'jquery';
 import moment from "moment";
 
+String.prototype.rjust = function( length, char ) {
+  var fill = [];
+  while ( fill.length + this.length < length ) {
+    fill[fill.length] = char;
+  }
+  return fill.join('') + this;
+}
+
 function renderList(data) {
   $('#game-list').empty();
 
   data.forEach((game) => {
       
     let status;
-    let action
+    let action;
+    let time;
 
     if (game.attributes.over) {
       if (game.attributes.winner) {
@@ -16,8 +25,11 @@ function renderList(data) {
       } else {
         status = '<b class="text-danger">LOST</b>';
       }
+      let duration = moment.duration(game.attributes.time * 1000);
+      time = `<span>Time: ${duration.hours().toString().rjust(2, '0')}:${duration.minutes().toString().rjust(2, '0')}:${duration.seconds().toString().rjust(2, '0')}</span>`  
       action = `<a class="flex-fill" href="/play?game_id=${game.id}">SHOW</a>`
     } else {
+      time = `<span>${moment(game.attributes.last_time_played).fromNow()}</span>`
       status = '<b class="text-info">PLAYING</b>';
       action = `<a class="flex-fill" href="/play?game_id=${game.id}">CONTINUE</a>`
     }
@@ -29,7 +41,7 @@ function renderList(data) {
     </dt>
     <dd class="d-inline-flex">
       ${action}
-      <span>${moment(game.attributes.last_time_played).fromNow()}</span>
+      ${time}
     </dd>
     `)
   });

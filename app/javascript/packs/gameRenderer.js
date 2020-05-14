@@ -1,5 +1,14 @@
 import apiClient from "./apiClient";
 import $ from 'jquery';
+import moment from "moment";
+
+String.prototype.rjust = function( length, char ) {
+  var fill = [];
+  while ( fill.length + this.length < length ) {
+    fill[fill.length] = char;
+  }
+  return fill.join('') + this;
+}
 
 let playingGameId;
 
@@ -75,11 +84,44 @@ function renderResult(over, winner) {
   }
 }
 
+let timeInterval;
+
+function renderCounters(mines, flags, time, elapsed = 0) {
+  $('#mines-count').empty()
+  $('#mines-count').append(`<span>Mines: ${mines}</span>`)
+
+  $('#flags-count').empty()
+  $('#flags-count').append(`<span>Flags: ${flags}</span>`)
+
+  if (elapsed > 0) {
+    clearInterval(timeInterval);
+    timeInterval = 0;
+
+    let duration = moment.duration(elapsed * 1000);
+    $('#time-count').empty()
+    $('#time-count').append(`<span>Time: ${duration.hours().toString().rjust(2, '0')}:${duration.minutes().toString().rjust(2, '0')}:${duration.seconds().toString().rjust(2, '0')}</span>`)
+  } else {
+    let duration = moment.duration(moment().diff(time), 'milliseconds');
+    timeInterval = setInterval(() => {
+      duration = moment.duration(moment().diff(time), 'milliseconds')
+      $('#time-count').empty()
+      $('#time-count').append(`<span>Time: ${duration.hours().toString().rjust(2, '0')}:${duration.minutes().toString().rjust(2, '0')}:${duration.seconds().toString().rjust(2, '0')}</span>`)
+    }, 1000);
+  }
+}
+
+
 function renderGame(data, gameId) {
   playingGameId = gameId || playingGameId;
-  console.log(gameId, playingGameId)
+
   renderResult(data.attributes.over, data.attributes.winner);
   renderBoard(data);
+  renderCounters(
+    data.attributes.mines, 
+    data.attributes.flags, 
+    data.attributes.created_at, 
+    data.attributes.time
+  );
 }
 
 function performAction(x, y, action) {
