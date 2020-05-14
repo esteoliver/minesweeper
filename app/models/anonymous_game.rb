@@ -1,7 +1,8 @@
 class AnonymousGame
   class << self
     def get(player_id)
-      Game.new JSON.parse(redis.get("#{namespace}:#{player_id}")).with_indifferent_access
+      attrs = JSON.parse(redis.get("#{namespace}:#{player_id}"))
+      Game.new(attrs.merge(level: 'custom').with_indifferent_access)
     end
     
     def set(player_id, game)

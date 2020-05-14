@@ -3,6 +3,8 @@ class Api::V1::PlayerActionsController < ApiController
   before_action :set_game
 
   def reveal
+    return render json: :unauthorized if anonymous? && !current?
+
     game = perform_action('reveal')
     if player_signed_in?
       render_jsonapi game
@@ -12,6 +14,8 @@ class Api::V1::PlayerActionsController < ApiController
   end
 
   def flag
+    return render json: :unauthorized if anonymous? && !current?
+
     game = perform_action('flag')
     if player_signed_in?
       render_jsonapi game
@@ -21,6 +25,8 @@ class Api::V1::PlayerActionsController < ApiController
   end
 
   def unflag
+    return render json: :unauthorized if anonymous? && !current?
+
     game = perform_action('unflag')
     if player_signed_in?
       render_jsonapi game
@@ -33,25 +39,33 @@ class Api::V1::PlayerActionsController < ApiController
 
   def perform_action(action)
     Action.perform(
-      @game, 
+      @game,
       action_params[:x], 
       action_params[:y], 
       action,
-      @anonymous_player,
+      @anonymous_player
     )    
   end
 
   def set_game
-    @game = find_game
+    @game ||= find_game
   end
 
   def find_game
-    if current_game?
-      player_signed_in? ? current_player.current_game : Game.find_anonymous(@anonymous_player)
+    if current? && anonymous?
+      Game.find_anonymous(@anonymous_player)
+    elsif current? && player_signed_in?
+      current_player.current_game
+    elsif player_signed_in?
+      current_player.games.find(params[:id])
     end
   end
 
-  def current_game?
+  def anonymous?
+    !player_signed_in?
+  end
+
+  def current?
     params[:id] == 'current'
   end
 

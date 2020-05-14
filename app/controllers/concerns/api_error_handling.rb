@@ -5,9 +5,22 @@ module ApiErrorHandling
 
     rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
     rescue_from ActiveRecord::RecordInvalid, :with => :record_invalid
+    rescue_from ActionController::ParameterMissing, :with => :param_missing
+
+    def param_missing(error)
+      render json: {
+        errors: [
+          {
+            title: "Bad request",
+            status: '400',
+            detail: error.message
+          }
+        ],
+        data: []
+      }, status: :bad_request
+    end
 
     def record_invalid(error)
-      puts pp error
       render json: {
         errors: [
           {

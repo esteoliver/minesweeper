@@ -7,13 +7,6 @@
 class Game < ApplicationRecord
   belongs_to :player, optional: true
 
-  DEFAULT_LEVEL = :intermediate
-  LEVELS = {
-    beginner: { rows: 8, columns: 8, mines_count: 10 },
-    intermediate: { rows: 16, columns: 16, mines_count: 40 },
-    expert: { rows: 24, columns: 24, mines_count: 99 }
-  }.freeze
-
   validates :rows, presence: true,
                    numericality: { 
                       greater_than_or_equal_to: Board::MIN_ROWS,
@@ -24,32 +17,46 @@ class Game < ApplicationRecord
                         greater_than_or_equal_to: Board::MIN_COLS,
                         less_than_or_equal_to: Board::MAX_COLS
                       }
+  validates :board_values, presence: { message: "invalid number of mines set" }
+
+  class << self
+    def create_anonymous(attrs)
+      player = attrs.delete('player')
+      game = Game.new(attrs)
+      game.validate!
+      AnonymousGame.set(player, game)
+    end
+
+    def find_anonymous(anonymous_player, **args)
+      raise_no_current_game! unless AnonymousGame.exists(anonymous_player)
+      
+      AnonymousGame.get(anonymous_player)
+    end
+
+    def initialize_filtered_attrs(attrs)
+      (attrs.to_h || {}).reject do |k,v| 
+        invalid_key = %w(level mines).include?(k)
+        if (!invalid_key && k == 'player')
+          if v.is_a?(Player) || Player.exists?(v)
+            invalid_key = false
+          else
+            invalid_key = true
+          end
+        end
+        invalid_key
+      end
+    end  
+  end
 
   # build a new game without params
-  def initialize(args)
-    args = {} if args.nil?
-
-    super(args.except(*invalid_args_to_initialize))
-
-    self.assign_attributes Board.new(args).as_json
+  def initialize(attrs = {})
+    board_attrs = Board.new(attrs || {}).attributes
+    super(Game.initialize_filtered_attrs(attrs).merge(board_attrs))
   end
 
-  def self.create_anonymous(anonymous_player, **args)
-    return {} if anonymous_player.nil?
-
-    AnonymousGame.set(anonymous_player, Game.new(args))
-  end
-
-  def self.create_or_find_anonymous(anonymous_player, **args)
-    return AnonymousGame.get(anonymous_player) if AnonymousGame.exists(anonymous_player)
-
-    create_anonymous(anonymous_player, args)
-  end
-
-  def self.find_anonymous(anonymous_player, **args)
-    raise_no_current_game! unless AnonymousGame.exists(anonymous_player)
-    
-    AnonymousGame.get(anonymous_player)
+  def touch
+    update!(updated_at: DateTime.now)
+    self
   end
 
   def visualize
@@ -81,12 +88,8 @@ class Game < ApplicationRecord
   
   private 
 
-  def invalid_args_to_initialize
-    %i(level mines mines_count anonymous_player)
-  end  
-
   def board
-    Board.new self.attributes.with_indifferent_access
+    Board.new self.attributes.merge(level: 'custom').with_indifferent_access
   end
 
   def self.raise_no_current_game!

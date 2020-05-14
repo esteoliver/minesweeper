@@ -14,7 +14,6 @@ class Action
     end
 
     game.id.nil? ? AnonymousGame.set(player, game) : game.save!
-
     game
   end
 end

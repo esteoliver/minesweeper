@@ -16,10 +16,10 @@ function renderList(data) {
       } else {
         status = '<b class="text-danger">LOST</b>';
       }
-      action = `<a class="" href="/play?game_id=${game.id}">SHOW</a>`
+      action = `<a class="flex-fill" href="/play?game_id=${game.id}">SHOW</a>`
     } else {
       status = '<b class="text-info">PLAYING</b>';
-      action = `<a class="" href="/play?game_id=${game.id}">CONTINUE</a>`
+      action = `<a class="flex-fill" href="/play?game_id=${game.id}">CONTINUE</a>`
     }
 
     $('#game-list').append(`
@@ -27,7 +27,7 @@ function renderList(data) {
       <span>${game.attributes.rows} X ${game.attributes.columns}</span>
       ${status}
     </dt>
-    <dd>
+    <dd class="d-inline-flex">
       ${action}
       <span>${moment(game.attributes.last_time_played).fromNow()}</span>
     </dd>

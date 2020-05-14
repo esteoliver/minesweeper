@@ -1,29 +1,57 @@
 class Board
+  DEFAULT_LEVEL = :intermediate
+  LEVELS = {
+    beginner: { rows: 8, columns: 8, mines_count: 10 },
+    intermediate: { rows: 16, columns: 16, mines_count: 40 },
+    expert: { rows: 24, columns: 24, mines_count: 99 }
+  }.freeze
   MIN_ROWS  = 2
   MAX_ROWS  = 48
   MIN_COLS  = 2
   MAX_COLS  = 48
 
-  attr_accessor :rows, :columns, :board_status, :board_values
+  attr_accessor :rows, :columns, :board_status, :board_values, :mines
 
-  def initialize(args)
-    if args[:board_values].nil?
-      set_default_size(args[:level]&.to_sym, args[:rows], args[:columns])
-      set_initial_board_status
-      generate_mines(args[:mines], args[:level]&.to_sym)
+  def initialize(attributes = {})
+    if attributes[:level] == 'custom'
+      self.rows    = attributes[:rows].to_i
+      self.columns = attributes[:columns].to_i
+      self.mines   = attributes[:mines].to_i
+    elsif LEVELS.keys.map(&:to_s).include? attributes[:level]
+      set_level attributes[:level].to_sym
     else
-      self.board_status = args[:board_status]
-      self.board_values = args[:board_values]
-      self.rows = args[:rows]
-      self.columns = args[:columns]
+      set_default
+    end
+
+    if attributes[:board_status].nil?
+      set_initial_board_status
+    else
+      self.board_status = attributes[:board_status]
+    end
+
+    if attributes[:board_values].nil?
+      generate_mines
+    else
+      self.board_values = attributes[:board_values]
     end
   end
 
+  def attributes
+    {
+      rows: rows, 
+      columns: columns,
+      board_status: board_status,
+      board_values: board_values
+    }
+  end
+
   def visualize
-    board_status.chars.each_with_index.map do |status_cell, i|
+    status.each_with_index.map do |status_cell, i|
       Cell.visualize(status_cell, values[i])
     end.join
   end
+
+  ##### ACTIONS
 
   def reveal(x, y)
     return board_status if revealed?(x, y)
@@ -57,7 +85,7 @@ class Board
     reveal_surroundings(x, y) if is_blank?(x, y)
   end
 
-  ## Cell logics
+  ###### CELLS
   def mine?(x, y)
     Cell.mine? values[(x * columns) + y]
   end
@@ -68,9 +96,6 @@ class Board
     end
   end
 
-  private
-
-  ## Cell logics
   def is_blank?(x, y)
     Cell.is_blank? values[(x * columns) + y]
   end
@@ -79,59 +104,59 @@ class Board
     Cell.revealed? status[(x * columns) + y]
   end
 
-  ## Build
+  private
 
-  def set_default_size(level, rows, columns)
-    rows ||= 0
-    columns ||= 0
+  ###### DEFAULT AND INITIAL VALUES
 
-    if Game::LEVELS.keys.include? level
-      self.rows = Game::LEVELS[level || Game::DEFAULT_LEVEL][:rows]
-      self.columns = Game::LEVELS[level || Game::DEFAULT_LEVEL][:columns]
-    else
-      self.rows = (rows.is_a?(String) ? rows.to_i : rows)
-      self.columns = (columns.is_a?(String) ? columns.to_i : columns)
-    end
+  def set_default
+    self.rows    = LEVELS[DEFAULT_LEVEL][:rows]
+    self.columns = LEVELS[DEFAULT_LEVEL][:columns]
+    self.mines   = LEVELS[DEFAULT_LEVEL][:mines_count]
+  end
+
+  def set_level(level)
+    self.rows    = LEVELS[level][:rows]
+    self.columns = LEVELS[level][:columns]
+    self.mines   = LEVELS[level][:mines_count]
   end
 
   def set_initial_board_status
     self.board_status = Cell::HIDDEN_STATE * (rows * columns)
   end
 
-  def generate_mines(mines_count, level)
-    level ||= Game::DEFAULT_LEVEL
-
-    if Game::LEVELS.keys.include? level
-      mines_count ||= Game::LEVELS[level][:mines_count]
-    else
-      mines_count ||= 0
+  def generate_mines
+    if mines <= 0 || mines >= (columns * rows)
+      self.board_values = nil
+      return
     end
-    mines_count = (mines_count.is_a?(String) ? mines_count.to_i : mines_count)
 
     tracker = Array.new(rows).map { |_| Array.new(columns, 0) }
-    mines = pick_mine_location(mines_count)
-
-    mines.each do |pos|
-                posx = pos / columns
-                posy = pos - (posx * columns)
-
-                increase_counters(tracker, posx, posy)
-              end
-    mines.each do |pos|
-      posx = pos / columns
-      posy = pos - (posx * columns)
-
-      tracker[posx][posy] = Cell::MINE_VALUE
-    end
-
+    set_values(tracker)
+    set_mines(tracker)
     self.board_values = tracker.map { |row| row.join }.join
   end
 
-  def pick_mine_location(size)
-    (0..((rows * columns) - 1)).to_a.sample(size)
+  def mines_location
+    @mine_location ||= (0..((rows * columns) - 1)).to_a.sample(mines)
   end
 
-  def increase_counters(tracker, x, y)
+  def set_values(tracker)
+    mines_location.each do |pos|
+      posx = pos / columns
+      posy = pos - (posx * columns)
+      set_surrounding(tracker, posx, posy)
+    end
+  end
+
+  def set_mines(tracker)
+    mines_location.each do |pos|
+      posx = pos / columns
+      posy = pos - (posx * columns)
+      tracker[posx][posy] = Cell::MINE_VALUE
+    end
+  end
+
+  def set_surrounding(tracker, x, y)
     if x > 0
       tracker[x-1][y-1] += 1 if y > 0
       tracker[x-1][y] += 1
@@ -148,7 +173,7 @@ class Board
     tracker[x][y+1] += 1 if y < (columns - 1)
   end
 
-  # Utilities
+  ###### Utilities
 
   def reveal_surroundings(x, y)
     surroundings = []

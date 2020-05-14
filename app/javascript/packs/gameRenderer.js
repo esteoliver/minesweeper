@@ -1,6 +1,8 @@
 import apiClient from "./apiClient";
 import $ from 'jquery';
 
+let playingGameId;
+
 function renderBoard(data) {
   $('#board').empty();
 
@@ -73,13 +75,15 @@ function renderResult(over, winner) {
   }
 }
 
-function renderGame(data) {
+function renderGame(data, gameId) {
+  playingGameId = gameId || playingGameId;
+  console.log(gameId, playingGameId)
   renderResult(data.attributes.over, data.attributes.winner);
   renderBoard(data);
 }
 
 function performAction(x, y, action) {
-  apiClient.game[`${action}Current`](x, y, (res, status) => {
+  apiClient.game[action](playingGameId, x, y, (res, status) => {
     renderGame(res.responseJSON.data)
   });
 }
