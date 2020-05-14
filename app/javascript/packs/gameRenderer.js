@@ -88,7 +88,7 @@ let timeInterval;
 
 function renderCounters(mines, flags, time, elapsed = 0) {
   $('#mines-count').empty()
-  $('#mines-count').append(`<span>Mines: ${mines}</span>`)
+  $('#mines-count').append(`<span>Mines: ${mines} (${mines - flags})</span>`)
 
   $('#flags-count').empty()
   $('#flags-count').append(`<span>Flags: ${flags}</span>`)

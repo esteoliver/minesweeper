@@ -14,7 +14,7 @@
       <h3 class="my-0">Play</h3>
       <hr>
 
-      <div class="mb-5 d-flex">
+      <div class="d-flex mb-2">
         <div class="flex-fill">
           <button id="new-game">
             <%= link_to 'New game', game_path %>
@@ -26,13 +26,35 @@
         </button>
       </div>
 
+      <div class="mb-4">
+        <div><b>Controllers</b></div>
+        <div>Left click: reveal cell</div>
+        <div>Right click: flag/unflag cell</div>
+      </div>
+
       <div class="counters px-5 d-flex justify-content-between">
         <h4 id="mines-count" class="m-0"></h4>
         <h4 id="flags-count" class="m-0"></h4>
         <h4 id="time-count"  class="m-0"></h4>
       </div>
 
-      <div id="board" class="d-flex flex-column align-items-center pt-4"></div>
+      <div class="d-flex flex-column align-items-center pt-4">
+        <div id="board"></div>
+      </div>
+
+      <div class="">
+        <div><b>Instructions</b></div>
+        <ul>
+          <li>Some squares contain mines (bombs), others don't.</li>
+          <li>If you click on a square containing a bomb, you lose.</li>
+          <li>If you manage to click all the squares (without clicking on any bombs) you win.</li>
+          <li>
+            Clicking a square which doesn't have a bomb reveals the number of neighbouring squares containing bombs.
+            Use this information plus some guess work to avoid the bombs.
+          </li>
+        </ul>      
+      </div>
+
     </div>
   </div>
 
