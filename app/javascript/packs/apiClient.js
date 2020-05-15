@@ -77,6 +77,7 @@ function apiAuth(baseUrl) {
       })
     },
     register: ({ nickname, password, email }, cb) => { 
+      console.log(nickname, password, email)
       post(`${baseUrl}/auth`, { player: { nickname, password, email } }, (res, status) => {
         if (status != 'error') {
           storeToken(res);
