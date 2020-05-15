@@ -19,7 +19,6 @@ $(document).ready(() => {
 
   
   $('#signup').on('click', e => {
-    console.log(signupForm)
     apiClient.auth.register(signupForm, (res, status) => {
       if (status == 'error') { 
         $('#message').empty();
