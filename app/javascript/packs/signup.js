@@ -19,14 +19,15 @@ $(document).ready(() => {
 
   
   $('#signup').on('click', e => {
-    apiClient.auth.register(signupForm, (res, status) => {
-      if (status == 'error') { 
-        $('#message').empty();
-        $('#message').text(res.responseJSON.errors.full_messages.join(', '))
-        return;
-      }
+    console.log(signupForm)
+    // apiClient.auth.register(signupForm, (res, status) => {
+    //   if (status == 'error') { 
+    //     $('#message').empty();
+    //     $('#message').text(res.responseJSON.errors.full_messages.join(', '))
+    //     return;
+    //   }
       
-      window.location.href = '/profiles/me';
-    })
+    //   window.location.href = '/profiles/me';
+    // })
   });
 });
