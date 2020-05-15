@@ -43,10 +43,10 @@ module RenderJsonapi
   end
 
   def compute_resource_type(resource)
-    resource_class(resource).base_class.name.to_sym
+    render_resource_class(resource).base_class.name.to_sym
   end
 
-  def resource_class(resource)
+  def render_resource_class(resource)
     if resource.is_a?(ActiveRecord::Relation)
       # ActiveRecord::Relation has a #klass method to divulge the class of records it contains
       resource_class = resource.klass

@@ -1,4 +1,4 @@
-class ApiController < ApplicationController
+class ApiController < ApplicationController  
   include RenderJsonapi
   include ApiErrorHandling
 
@@ -16,8 +16,6 @@ class ApiController < ApplicationController
 
   def set_anonymous_player
     @anonymous_player = session[:anonymous_player] || SecureRandom.uuid
-
-    puts "Player anonymous: #{@anonymous_player}"
 
     session[:anonymous_player] = @anonymous_player if session[:anonymous_player].nil?
   end

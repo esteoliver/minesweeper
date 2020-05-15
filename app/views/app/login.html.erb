@@ -13,25 +13,27 @@
       <h3 class="my-0">Log in</h3>
       <hr>
 
-      <%= form_for(resource, as: resource_name, 
-                             url: session_path(resource_name), 
-                             html: { class: 'd-flex flex-column pt-4' }
-                  ) do |f| %>
+      <div class="d-flex flex-column pt-4">
         <div class="field mb-4">
-          <%= f.label :nickname %><br />
-          <%= f.text_field :nickname, autofocus: true %>
+          <label for="nickname">Nickname</label>
+          <input id="nickname" name="nickname" type="text" autofocus/>
         </div>
 
         <div class="field mb-4">
-          <%= f.label :password %><br />
-          <%= f.password_field :password, autocomplete: "current-password" %>
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password"/>
         </div>
 
         <div class="actions">
-          <%= f.button "Log in", type: :submit, class: "mr-4" %>
-          <%= render "devise/shared/links" %>
+          <button id="login" class="mr-4">Login</button>
+          
+          <%= link_to "Sign up", signup_path %>
         </div>
-      <% end %>
+      </div>
+
+      <div id="message" class="pt-4 text-danger"></div>
     </div>
   </div>
 </div>
+
+<%= javascript_pack_tag "login" %>

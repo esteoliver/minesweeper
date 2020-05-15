@@ -76,6 +76,16 @@ function getGames(page = 1) {
 }
 
 $(document).ready(() => {
+  if (!apiClient.auth.authenticated()) {
+    window.location.href = `/`
+  }
+
   const params = new URLSearchParams(window.location.search)
   getGames(params.get('page'));
+
+  $('#logout').on('click', e => {
+    apiClient.auth.logout((res, status) => {
+      window.location.href = '/';
+    })
+  });  
 });

@@ -6,8 +6,6 @@ class AnonymousGame
     end
     
     def set(player_id, game)
-      puts "New game for Player #{player_id}"
-  
       redis.set "#{namespace}:#{player_id}", game.to_json, ex: 600
       game
     end

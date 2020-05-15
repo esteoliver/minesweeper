@@ -56,7 +56,8 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 ### Custom gems
 
 # Authentication
-gem 'devise'
+gem 'devise', '~> 4.7.1'
+gem 'devise_token_auth', '~> 1.1', '>= 1.1.3'
 # Serialize api responses to jsonapi
 gem 'fast_jsonapi'
 # redis API client
@@ -67,3 +68,5 @@ gem 'kaminari'
 
 # environment variables
 gem 'dotenv-rails', groups: [:development, :test]
+
+gem 'rack-cors', :require => 'rack/cors'

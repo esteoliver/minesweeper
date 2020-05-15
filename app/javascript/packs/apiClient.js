@@ -6,6 +6,7 @@ function post(url, data, cb) {
     type: "POST",
     url: url,
     data: data,
+    headers: JSON.parse(localStorage.getItem('currentPlayer')),
     complete: cb,
     dataType: 'json'
   });
@@ -16,6 +17,7 @@ function put(url, data, cb) {
     type: "PUT",
     url: url,
     data: data,
+    headers: JSON.parse(localStorage.getItem('currentPlayer')),
     complete: cb,
     dataType: 'json'
   });
@@ -25,9 +27,64 @@ function get(url, cb) {
   $.ajax({
     type: "GET",
     url: url,
+    headers: JSON.parse(localStorage.getItem('currentPlayer')),
     complete: cb,
     dataType: 'json'
   });
+}
+
+function destroy(url, cb) {
+  $.ajax({
+    type: "DELETE",
+    url: url,
+    complete: cb,
+    headers: JSON.parse(localStorage.getItem('currentPlayer')),
+    dataType: 'json'
+  });
+}
+
+function storeToken(res) {
+  localStorage.setItem('currentPlayer', JSON.stringify(
+    {
+      'access-token': res.getResponseHeader('access-token'),
+      uid: res.getResponseHeader('uid'),
+      client: res.getResponseHeader('client')
+    }
+  ));
+}
+
+function deleteToken() {
+  localStorage.setItem('currentPlayer', '{}')
+}
+
+function apiAuth(baseUrl) {
+  return {
+    authenticated: () => { 
+      return localStorage.getItem('currentPlayer') != "{}";
+    },
+    login: ({ nickname, password }, cb) => { 
+      post(`${baseUrl}/auth/sign_in`, { player: { nickname, password } }, (res, status) => {
+        if (status != 'error') {
+          storeToken(res);
+        }
+        cb(res, status);
+      }) 
+    },
+    logout: (cb) => { 
+      destroy(`${baseUrl}/auth/sign_out`, (res, status) => {
+        deleteToken();
+        cb(res, status);
+      })
+    },
+    register: ({ nickname, password, email }, cb) => { 
+      post(`${baseUrl}/auth`, { player: { nickname, password, email } }, (res, status) => {
+        if (status != 'error') {
+          storeToken(res);
+        }
+        cb(res, status);
+      })
+    },
+  }
 }
 
 // TO IMPLEMENT
@@ -66,8 +123,9 @@ function apiGame(baseUrl) {
 
 class ApiClient {
   constructor({ baseUrl }) {
-    this.baseUrl = baseUrl
+    this.baseUrl = baseUrl;
     this.game = apiGame(baseUrl);
+    this.auth = apiAuth(baseUrl);
   }
 }
 

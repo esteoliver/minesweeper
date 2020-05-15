@@ -11,7 +11,7 @@
 
     <div class="window-body to-content p-4">
 
-      <h4 class="my-0">Welcome <%= current_player.nickname %>! </h4>
+      <h4 class="my-0">Welcome! </h4>
       <hr>
 
       <div class="mb-5 d-flex">
@@ -21,9 +21,7 @@
           </button>
         </div>
 
-        <button>
-          <%= link_to('Logout', destroy_player_session_path, method: :delete) %>
-        </button>
+        <button id="logout">Logout</button>
       </div>
 
       <div class="">

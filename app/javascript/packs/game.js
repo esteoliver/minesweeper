@@ -18,8 +18,6 @@ const game = { level: 'intermediate' };
 $(document).ready(() => {
   $('input').on('change', e => {
     const input = $(e.target);
-
-    console.log(input.attr('name'))
     game[input.attr('name')] = input.val();
   });
 

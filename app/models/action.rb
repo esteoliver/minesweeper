@@ -1,8 +1,5 @@
 class Action
   def self.perform(game, x, y, action, player = nil)
-    puts "Click (#{x},#{y}) to #{action}"
-    puts "Game #{ game.id.nil? ? "search current" : game.id }"
-
     return game if game.over?
 
     if action == 'reveal'

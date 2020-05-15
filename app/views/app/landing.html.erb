@@ -21,11 +21,11 @@
           </div>
 
           <button>
-            <%= link_to 'Login', new_player_session_path %>
+            <%= link_to 'Login', login_path %>
           </button>
 
           <button>
-            <%= link_to "Sign up", new_registration_path('player') %><br />
+            <%= link_to "Sign up", signup_path %><br />
           </button>
         </div>
       </div>
@@ -57,3 +57,5 @@
     </div>
   </div>
 </div>
+
+<%= javascript_pack_tag "landing" %>
