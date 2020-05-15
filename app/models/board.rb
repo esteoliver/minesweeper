@@ -6,9 +6,9 @@ class Board
     expert: { rows: 24, columns: 24, mines_count: 99 }
   }.freeze
   MIN_ROWS  = 2
-  MAX_ROWS  = 48
+  MAX_ROWS  = 30
   MIN_COLS  = 2
-  MAX_COLS  = 48
+  MAX_COLS  = 30
 
   attr_accessor :rows, :columns, :board_status, :board_values, :mines
 
